@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Birthday Countdown</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: blueviolet;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 1.8rem;
+      color: #333;
+    }
+
+    .timer {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .box {
+      background: #fff;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      width: 80px;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .value {
+      font-size: 2rem;
+      animation: slideUp 0.5s ease-in-out;
+    }
+
+    .label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 8px;
+    }
+
+    @keyframes slideUp {
+      0% {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body onload="startConfetti()">
+
+  <div class="card">
+    <h1>🎂❤️ Your Birthday Countdown</h1>
+    <div class="timer">
+      <div class="box">
+        <div id="days" class="value">00</div>
+        <div class="label">Days</div>
+      </div>
+      <div class="box">
+        <div id="hours" class="value">00</div>
+        <div class="label">Hours</div>
+      </div>
+      <div class="box">
+        <div id="minutes" class="value">00</div>
+        <div class="label">Minutes</div>
+      </div>
+      <div class="box">
+        <div id="seconds" class="value">00</div>
+        <div class="label">Seconds</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const birthdayMonth = 5;  // September
+    const birthdayDay = 16;
+    let lastTime = {};
+
+    function updateCountdown() {
+      const now = new Date();
+      let nextBirthday = new Date(now.getFullYear(), birthdayMonth - 1, birthdayDay);
+
+      if (now > nextBirthday) {
+        nextBirthday.setFullYear(now.getFullYear() + 1);
+      }
+
+      const timeLeft = nextBirthday - now;
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+      const seconds = Math.floor((timeLeft / 1000) % 60);
+
+      const timeData = { days, hours, minutes, seconds };
+
+      for (let unit in timeData) {
+        const el = document.getElementById(unit);
+        const newValue = String(timeData[unit]).padStart(2, '0');
+
+        if (lastTime[unit] !== newValue) {
+          el.classList.remove("value");
+          void el.offsetWidth; // Force reflow
+          el.classList.add("value");
+          el.textContent = newValue;
+          lastTime[unit] = newValue;
+        }
+      }
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+
+</body>
+</html>
